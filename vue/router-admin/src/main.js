@@ -16,7 +16,6 @@ axios.defaults.baseURL = 'http://localhost:8080/'
 
 axios.interceptors.request.use(config=>{
   const token = localStorage.getItem('token')
-  console.log(token)
   config.headers.token = token
   return config
 });
