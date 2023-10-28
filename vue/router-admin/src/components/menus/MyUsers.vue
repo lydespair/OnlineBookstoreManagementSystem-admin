@@ -9,12 +9,12 @@
                 </el-form-item>
                 <el-form-item label="用户状态">
                     <el-select v-model="user.state" placeholder="全部状态" style="width: 150px">
-                        <el-option label="账号正常" value="1"></el-option>
-                        <el-option label="已封禁" value="2"></el-option>
+                        <el-option label="账号正常" value=1></el-option>
+                        <el-option label="已封禁" value=2></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="getuserlist">查询</el-button>
+                    <el-button type="primary" @click="select">查询</el-button>
                 </el-form-item>
             </el-form>
         </el-row>
@@ -30,12 +30,12 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                    <el-button type="success" size="mini" @click="handleEdit(scope.row)">解禁</el-button>
                     <el-button
                         size="mini"
                         type="danger"
-                        @click="handleDelete(scope.$index, scope.row)"
-                    >删除</el-button>
+                        @click="handleDelete(scope.row)"
+                    >封禁</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     getuserlist() {
-      this.$http.get("/users").then((res) => {
+      this.$http.get("/users").then(res => {
         this.userlist = res.data.data.rows;
         console.log(this.userlist);
       });
@@ -68,6 +68,48 @@ export default {
       if (row.state == 2) {
         return "warning-row";
       }
+    },
+    handleEdit(obj) {
+      this.$message({
+            type: "success",
+            message: "解禁成功!",
+      })
+      obj.state = 1;
+      this.$http.put('/users', obj).then(res => {
+        this.getuserlist();
+      })
+    },
+    select() {
+      this.$http.get('/users', {
+        params: {
+          key: this.user.userName,
+          type: this.user.state
+        }
+      }).then(res => {
+        this.userlist = res.data.data.rows;
+      })
+    },
+    handleDelete(obj) {
+      this.$confirm("是否封禁此用户", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+          this.$message({
+            type: "success",
+            message: "封禁成功!",
+          });
+          obj.state = 2
+          this.$http.put("/users", obj).then(res => {
+            this.getuserlist();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消",
+          })
+        })
     }
   },
   beforeMount() {

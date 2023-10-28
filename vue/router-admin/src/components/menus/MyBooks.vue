@@ -56,7 +56,7 @@
             <el-table-column prop="count" label="库存" width="80"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+                    <el-button size="mini" type="info" @click="handleEdit(scope.row)">编辑</el-button>
                     <el-button size="mini" type="danger" @click="handleDelete(scope.row)">下架</el-button>
                 </template>
             </el-table-column>
@@ -148,7 +148,7 @@
                 </el-col>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button @click="cancel">取 消</el-button>
                 <el-button type="primary" @click="update(form)">确 定</el-button>
             </span>
         </el-dialog>
@@ -228,7 +228,7 @@
                 </el-col>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible1 = false">取 消</el-button>
+                <el-button @click="cancel2">取 消</el-button>
                 <el-button type="primary" @click="add(form1)">确 定</el-button>
             </span>
         </el-dialog>
@@ -315,10 +315,10 @@ export default {
           this.$message({
             type: "success",
             message: "删除成功!",
-          });
+          })
           this.$http.delete("/books/" + obj.isbn).then((res) => {
             this.getbooklist();
-          });
+          })
         })
         .catch(() => {
           this.$message({
@@ -326,6 +326,20 @@ export default {
             message: "已取消删除",
           });
         });
+    },
+    cancel() {
+      this.$message({
+            type: "info",
+            message: "已取消",
+      })
+      this.dialogVisible = false
+    },
+    cancel2() {
+      this.$message({
+            type: "info",
+            message: "已取消",
+      })
+      this.dialogVisible1 = false
     },
     handleAvatarSuccess(res, file) {
       this.url = res.data;
@@ -351,6 +365,10 @@ export default {
       }
     },
     update(obj) {
+      this.$message({
+            type: "success",
+            message: "修改成功!",
+      })
       this.dialogVisible = false;
       if (this.url) obj.image = this.url;
       this.url = "";
@@ -364,6 +382,10 @@ export default {
       });
     },
     add(obj) {
+      this.$message({
+            type: "success",
+            message: "添加成功!",
+      })
       this.dialogVisible1 = false;
       if (this.url) obj = this.url;
       this.url = "";

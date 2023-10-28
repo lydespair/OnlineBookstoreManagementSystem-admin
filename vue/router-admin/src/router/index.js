@@ -9,6 +9,7 @@ import Books from '@/components/menus/MyBooks'
 import Orders from '@/components/menus/MyOrders'
 import Rights from '@/components/menus/MyRights'
 import Settings from '@/components/menus/MySettings'
+import OrderItem from '@/components/order/MyOrderDetail'
 
 Vue.use(VueRouter)
 
@@ -16,12 +17,13 @@ const router = new VueRouter({
   routes: [
     { path: '/', redirect: '/login'},
     { path: '/login', component: Login},
-    { path: '/home', component: Home, children: [
+    { path: '/home', component: Home, redirect: '/home/users', children: [
       { path: 'users', component: Users},
       { path: 'books', component: Books},
       { path: 'orders', component: Orders},
       { path: 'rights', component: Rights},
-      { path: 'settings', component: Settings}
+      { path: 'settings', component: Settings},
+      { path: 'orderItem', component: OrderItem}
     ]}
   ]
 })

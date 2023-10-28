@@ -10,7 +10,7 @@
 
     <!-- 右侧按钮区域 -->
     <div class="layout-header-right">
-      <button type="button" class="btn btn-light" @click="logout">退出登录</button>
+      <el-button type="danger" @click="logout" round>退出登录</el-button>
     </div>
   </div>
 </template>
