@@ -300,6 +300,10 @@ export default {
       this.getbooklist();
     },
     handleCancle() {
+      this.$message({
+            type: "info",
+            message: "已取消删除",
+      })
       this.getbooklist();
     },
     handleEdit(obj) {
@@ -324,8 +328,8 @@ export default {
           this.$message({
             type: "info",
             message: "已取消删除",
-          });
-        });
+          })
+        })
     },
     cancel() {
       this.$message({
