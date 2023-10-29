@@ -20,9 +20,9 @@
         </el-row>
 
         <el-table :data="userlist" style="width: 100%" :row-class-name="tableRowClassName">
-            <el-table-column prop="userId" label="用户ID" width="140"></el-table-column>
-            <el-table-column prop="userName" label="用户名" width="180"></el-table-column>
-            <el-table-column prop="address" label="地址"></el-table-column>
+            <el-table-column prop="userId" label="用户ID" width="120"></el-table-column>
+            <el-table-column prop="userName" label="用户名" width="160"></el-table-column>
+            <el-table-column prop="address" label="地址" width="160"></el-table-column>
             <el-table-column prop="tel" label="联系方式"></el-table-column>
             <el-table-column prop="email" label="邮箱" width="230"></el-table-column>
             <el-table-column label="账号状态" width="160">
@@ -39,7 +39,17 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination background layout="prev, pager, next" :total="1000" style="margin-top: 30px"></el-pagination>
+        <el-pagination
+            background
+            layout="total, prev, pager, next, ->, jumper, sizes"
+            :page-size="tablePage.pageSize"
+            :current-page="tablePage.pageNum"
+            :page-sizes="pageSizes"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :total="tablePage.total"
+            style="margin-top: 30px"
+        ></el-pagination>
     </div>
 </template>
 
@@ -55,11 +65,29 @@ export default {
         state: "",
       },
       formInline: {},
+      tablePage: {
+        pageNum: 1, // 第几页
+        pageSize: 5, // 每页多少条
+        total: 0, // 总记录数
+      },
+      pageSizes: [5, 8, 10, 20],
     };
   },
   methods: {
+    async gettotal() {
+      const { data: res } = await this.$http.get("/users/counts");
+      this.tablePage.total = res.data;
+    },
     getuserlist() {
-      this.$http.get("/users").then(res => {
+      this.gettotal();
+      this.$http.get("/users", {
+        params: {
+          type: this.user.state,
+          key: this.user.userName,
+          page: this.tablePage.pageNum,
+          pageSize: this.tablePage.pageSize,
+        }
+      }).then(res => {
         this.userlist = res.data.data.rows;
         console.log(this.userlist);
       });
@@ -78,6 +106,14 @@ export default {
       this.$http.put('/users', obj).then(res => {
         this.getuserlist();
       })
+    },
+    handleSizeChange(val) {
+      this.tablePage.pageSize = val;
+      this.getuserlist();
+    },
+    handleCurrentChange(val) {
+      this.tablePage.pageNum = val;
+      this.getuserlist();
     },
     select() {
       this.$http.get('/users', {

@@ -49,9 +49,9 @@
             <el-table-column prop="type" label="类型" width="100">
                 <template slot-scope="scope">{{ type[scope.row.type - 1] }}</template>
             </el-table-column>
-            <el-table-column prop="publisher" label="出版社"></el-table-column>
-            <el-table-column prop="price" label="价格" width="80"></el-table-column>
-            <el-table-column prop="author" label="作者" width="120"></el-table-column>
+            <el-table-column prop="publisher" label="出版社" width="140"></el-table-column>
+            <el-table-column prop="price" label="价格" width="70"></el-table-column>
+            <el-table-column prop="author" label="作者" width="110"></el-table-column>
             <el-table-column prop="publishDate" label="出版时间" width="120"></el-table-column>
             <el-table-column prop="count" label="库存" width="80"></el-table-column>
             <el-table-column label="操作">

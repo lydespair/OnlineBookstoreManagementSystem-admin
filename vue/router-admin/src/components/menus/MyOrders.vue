@@ -5,7 +5,6 @@
       <el-input style="width: 200px; margin: 10px" placeholder="输入查询信息"
                 v-model="orderIdOrUserId"  @keyup.enter.native="load"></el-input>
       <el-button type="primary" @click.native="load">查询</el-button>
-      <el-button type="primary" @click.native="reset">重置</el-button>
     </div>
 
     <div>
@@ -35,7 +34,7 @@
 
         <el-table-column label="操作">
           <template v-slot="scope">
-            <span :key="scope.row.orderId"><router-link to="/home/orderItem">详情</router-link></span>
+            <a href="#" @click.prevent="gotoOrderitem(scope.row.orderId)"> 详情</a>
           </template>
         </el-table-column>
       </el-table>
@@ -116,6 +115,9 @@ export default {
         localStorage.setItem('orderInformation', JSON.stringify(res))
         this.$router.push('/orderitemId');
       })
+    },
+    gotoOrderitem(orderId) {
+      this.$router.push('/home/orderItem/' + orderId)
     },
     del(row) {
       this.$confirm('是否删除此订单', '提示', {

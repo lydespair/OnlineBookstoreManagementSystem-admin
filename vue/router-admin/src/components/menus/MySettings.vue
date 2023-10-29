@@ -1,5 +1,5 @@
 <template>
-  <h4 class="text-center">系统设置</h4>
+  <h2 class="text-center">系统设置</h2>
 </template>
 
 <script>
