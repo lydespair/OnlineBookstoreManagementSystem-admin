@@ -6,7 +6,7 @@
                 type="primary"
                 @click="dialogVisible1 = true"
                 round
-                style="margin-right: 560px; height: 40px"
+                style="margin-right: 557px; height: 40px"
             >新增图书</el-button>
             <el-form :inline="true" :model="formInline" class="demo-form-inline">
                 <el-form-item label="查询图书">
@@ -14,6 +14,7 @@
                 </el-form-item>
                 <el-form-item label="图书类型">
                     <el-select v-model="book.booktype" placeholder="全部类型" style="width: 150px">
+                        <el-option label="全部" value="0"></el-option>
                         <el-option label="文学小说" value="1"></el-option>
                         <el-option label="社科经营" value="2"></el-option>
                         <el-option label="幼儿童书" value="3"></el-option>
@@ -284,7 +285,7 @@ export default {
         })
         .then((res) => {
           this.booklist = res.data.data.rows;
-        });
+        })
     },
     tableRowClassName({ row, rowIndex }) {
       if (row.count == 0) {
@@ -300,10 +301,6 @@ export default {
       this.getbooklist();
     },
     handleCancle() {
-      this.$message({
-            type: "info",
-            message: "已取消删除",
-      })
       this.getbooklist();
     },
     handleEdit(obj) {
@@ -373,27 +370,28 @@ export default {
             type: "success",
             message: "修改成功!",
       })
-      this.dialogVisible = false;
       if (this.url) obj.image = this.url;
       this.url = "";
       this.$http.put("/books", obj).then((res) => {
-        for (let i = 0; i < this.booklist.size(); i++) {
+        for (let i = 0; i < this.booklist.length; i++) {
           if (this.booklist[i].isbn === obj.isbn) {
             this.booklist[i] = obj;
+            this.dialogVisible = false
             this.getbooklist();
           }
         }
       });
     },
-    add(obj) {
+    async add(obj) {
       this.$message({
             type: "success",
             message: "添加成功!",
       })
-      this.dialogVisible1 = false;
-      if (this.url) obj = this.url;
+      if (this.url) obj.image = this.url;
       this.url = "";
-      this.$http.post("/books", obj).then((res) => {
+      await this.$http.post("/books", obj).then((res) => {
+        this.dialogVisible1 = false
+        this.form1 = {}
         this.getbooklist();
       });
     },

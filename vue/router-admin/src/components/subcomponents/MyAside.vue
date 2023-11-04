@@ -8,38 +8,38 @@
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b">
-      <el-menu-item index="1" @click="gotowelcome">
+      <el-menu-item index="1" @click="gotowelcome" style="width: 250px">
           <i class="el-icon-location"></i>
           <span slot="title">首页</span>
       </el-menu-item>
-      <el-submenu index="2">
+      <el-submenu index="2" style="width: 250px">
         <template slot="title">
           <i class="el-icon-menu"></i>
           <span>用户管理</span>
         </template>
-          <el-menu-item index="2-1" @click="gotousers">
+          <el-menu-item index="2-1" @click="gotousers" style="width: 250px">
             <i class="el-icon-s-custom"></i>用户列表
           </el-menu-item>
       </el-submenu>
-      <el-submenu index="3">
+      <el-submenu index="3" style="width: 250px">
         <template slot="title">
           <i class="el-icon-menu"></i>
           <span>图书管理</span>
         </template>
-          <el-menu-item index="3-1" @click="gotobooks">
+          <el-menu-item index="3-1" @click="gotobooks" style="width: 250px">
             <i class="el-icon-reading"></i>图书列表
           </el-menu-item>
       </el-submenu>
-      <el-submenu index="4">
+      <el-submenu index="4" style="width: 250px">
         <template slot="title">
           <i class="el-icon-menu"></i>
           <span>订单管理</span>
         </template>
-          <el-menu-item index="4-1" @click="gotoorders">
+          <el-menu-item index="4-1" @click="gotoorders" style="width: 250px">
             <i class="el-icon-sell"></i>订单列表
           </el-menu-item>
       </el-submenu>
-      <el-menu-item index="5" @click="gotosettings">
+      <el-menu-item index="5" @click="gotosettings" style="width: 250px">
         <i class="el-icon-setting"></i>
         <span slot="title">系统设置</span>
       </el-menu-item>
@@ -65,6 +65,12 @@ export default {
     },
     gotoorders() {
       this.$router.push('/home/orders')
+    },
+    handleOpen() {
+
+    },
+    handleClose() {
+      
     }
   }
 };

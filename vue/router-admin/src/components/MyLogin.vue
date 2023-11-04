@@ -1,62 +1,96 @@
 <template>
-  <div class="login-container">
-    <div class="login-box">
-
-      <!-- 头像区域 -->
-      <div class="text-center avatar-box">
-        <img src="../assets/logo.png" class="img-thumbnail avatar" alt="">
-      </div>
-
-      <!-- 表单区域 -->
-      <div class="form-login p-4">
-        <!-- 登录名称 -->
-        <div class="form-group form-inline">
-          <label for="username">登录名称</label>
-          <input type="text" v-model.trim="admin.adminName" class="form-control ml-2" id="username" placeholder="请输入登录名称" autocomplete="off">
+    <section>
+        <!-- 登录 -->
+        <div class="container">
+        <div class="user singinBx">
+            <div class="imgBx"><img src="../assets/1.jpg"></div>
+            <div class="formBx">
+                <form>
+                    <h2>用户登录</h2>
+                    <input v-model="user.userName" type="text" name="" id="name" placeholder="用户名"/>
+                    <input v-model="user.userPassword" name="" type="password" id="password" placeholder="密码"/>
+                    <input type="button" name="" value="登录" @click="login"/>
+                    <p class="signup"><a href="#" @click="getoadmin">管理员登录</a></p>
+                    <p class="signup">没有账号？<a href="#" @click="topggleForm">注册</a></p>
+                </form>
+            </div>
         </div>
-        <!-- 登录密码 -->
-        <div class="form-group form-inline">
-          <label for="password">登录密码</label>
-          <input type="password" v-model.trim="admin.adminPwd" class="form-control ml-2" id="password" placeholder="请输入登录密码">
+        <!-- 注册 -->
+        <div class="user singupBx">
+            <div class="formBx">
+                <form>
+                    <h2>用户注册</h2>
+                    <input type="text" v-model="user.userName" id="name2" placeholder="用户名"/>
+                    <input type="email" v-model="user.email" id="email" placeholder="邮箱地址"/>
+                    <input type="password" v-model="user.userPassword" id="password2" placeholder="密码"/>
+                    <input type="password" v-model="user.userPassword1" placeholder="再次输入密码"/>
+                    <input type="button" value="注册" @click="register"/>
+                    <p class="signup">已有账号？<a href="#" @click="topggleForm">登录</a></p>
+                </form>
+            </div>
+            <div class="imgBx"><img src="../assets/2.jpg"></div>
         </div>
-        <!-- 登录和重置按钮 -->
-        <div class="form-group form-inline d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary mr-2" @click="reset">重置</button>
-          <button type="button" class="btn btn-primary" @click="login">登录</button>
-        </div>
-      </div>
-
     </div>
-  </div>
+    </section>
 </template>
 
 <script>
 export default {
-  name: 'MyLogin',
+  name: "MyLogin",
   data() {
     return {
       admin: {
-        adminName: '',
-        adminPwd: ''
+        adminName: "",
+        adminPwd: "",
+      },
+      user: {
+        userName: '',
+        userPassword: '',
+        userPassword1: '',
+        email: ''
       }
-    }
+    };
   },
   methods: {
     reset() {
-      this.adminName = '',
-      this.adminPwd = ''
+      (this.adminName = ""), (this.adminPwd = "");
+    },
+    topggleForm() {
+        var container = document.querySelector('.container')
+        container.classList.toggle('active')
+    },
+    getoadmin() {
+      this.$router.push('adminlogin')
+    },
+    async register() {
+      if (this.user.userPassword != this.user.userPassword1) {
+        this.$message({
+            type: "error",
+            message: "两次密码不一致!",
+        })
+      }
+      else {
+        this.$message({
+            type: "success",
+            message: "注册成功!",
+        })
+        await this.$http.post('/users/register', this.user)
+        this.topggleForm()
+      }
     },
     async login() {
-      const {data: res} = await this.$http.post('/admins/login', this.admin)
+      const {data: res} = await this.$http.post('/users/login', this.user)
+      
       if (res.code === 1) {
-        localStorage.setItem('token', res.token)
-        this.$router.push('home')
+        localStorage.setItem("token", res.token);
+        localStorage.setItem("user", res.data.userId);
+        this.$router.push("index");
       } else {
-        localStorage.removeItem('token')
+        localStorage.removeItem("token");
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
@@ -99,4 +133,186 @@ export default {
     box-shadow: 0 0 6px #efefef;
   }
 }
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* 设置整个表单参数 (父盒子)*/
+
+section {
+  position: relative;
+  min-height: 100vh;
+  background: #ffefd5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+section .container {
+  position: relative;
+  width: 800px;
+  height: 500px;
+  background: #fff;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+section .container .user {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+/* 更改图片  （左侧）*/
+section .container .imgBx {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  /* background: #fff; */
+  transition: 0.5s;
+}
+
+section .container .user .imgBx img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 右侧表单盒子 */
+
+section .container .user .formBx {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  transition: 0.5s;
+}
+
+/* h2 */
+
+section .container .user .formBx form h2 {
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase; /*大小*/
+  letter-spacing: 2px; /* 间距*/
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+/* 表单文字属性 */
+
+section .container .user .formBx form input {
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  background: #f5f5f5;
+  color: #333;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  margin: 8px 0;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 300;
+}
+
+/* 为登录设置样式 */
+
+section .container .user .formBx form input[type="button"] {
+  max-width: 100px;
+  background: #ffdab9;
+  color: #fff;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: 0.5s;
+  border-radius: 5px;
+  border-color: #ffdab6;
+}
+
+/* 没有账号时 */
+
+section .container .user .formBx form .signup {
+  position: relative;
+  margin-top: 20px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #555;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+section .container .user .formBx form .signup a {
+  font-weight: 600;
+  text-decoration: none;
+  color: #ffdab9;
+}
+section .container .singupBx {
+  pointer-events: none;
+}
+
+section .container.active .singupBx {
+  pointer-events: initial;
+}
+
+section .container .singupBx .formBx {
+  left: 100%;
+}
+
+section .container.active .singupBx .formBx {
+  left: 0;
+}
+
+section .container .singupBx .imgBx {
+  left: -100%;
+}
+
+section .container.active .singupBx .imgBx {
+  left: 0;
+}
+
+section .container .singinBx .formBx {
+  left: 0;
+}
+
+section .container.active .singinBx .formBx {
+  left: 100%;
+}
+
+section .container .singinBx .imgBx {
+  left: 0;
+}
+
+section .container.active .singinBx .imgBx {
+  left: 100%;
+}
+
+@media (max-width: 991px) {
+  section .container {
+    max-width: 400px;
+  }
+
+  section .container .imgBx {
+    display: none;
+  }
+}
+
+/*@import url("//unpkg.com/element-ui@2.15.14/lib/theme-chalk/index.css");*/
 </style>
